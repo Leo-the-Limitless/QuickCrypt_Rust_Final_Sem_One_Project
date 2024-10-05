@@ -17,6 +17,7 @@ May Nyein
 decrypt_file
 generate key, iv
 copy key, iv
+truncate_middle for file path
 
 2. Messages
 DecryptFile
@@ -26,13 +27,4 @@ Copy key, iv
 3. GUI
 Buttons
 Overall GUI enhancement
-
-------------------------------
-GUI enhancement
-Paddings
-
-Key twy ko byy bk poh
-
-Message twy user-friendly po phyik ag loke
-
-Key twy ko thy chr save htrr phoe remind loke
+Theme

@@ -3,7 +3,7 @@ use block_modes::{BlockMode, Cbc};
 use block_modes::block_padding::Pkcs7;
 use hex::{decode, encode};
 use iced::widget::{Button, Column, Row, Container, Text, TextInput};
-use iced::{executor, Alignment, Application, Command, Element, Length, Settings, Theme, clipboard};
+use iced::{alignment::Horizontal, executor, Alignment, Application, Command, Element, Length, Settings, Theme, clipboard};
 use rand::Rng;
 use std::fs::{read, write};
 
@@ -30,11 +30,25 @@ enum Message {
     CopyIvToClipboard,
 }
 
+fn truncate_middle(s: &str, max_length: usize) -> String {
+    if s.len() <= max_length {
+        s.to_string()
+    } else {
+        let half_len = max_length / 2;
+        format!("{}....{}", &s[..half_len], &s[s.len()-half_len..])
+    }
+}
+
 impl Application for FileEncryptionTool {
     type Executor = executor::Default;
     type Message = Message;
     type Flags = ();
     type Theme = Theme;
+
+    fn theme(&self) -> iced::Theme {
+		iced::Theme::KanagawaDragon
+
+	}
 
     fn new(_flags: ()) -> (Self, Command<Self::Message>) {
         (
@@ -65,7 +79,7 @@ impl Application for FileEncryptionTool {
             }
             Message::EncryptFile => {
                 if self.file_path.is_empty() || self.key.is_empty() || self.iv.is_empty() {
-                    self.status_message = "Please enter file path, key, and IV.".to_string();
+                    self.status_message = "Please enter all fields (file path, key, and IV).".to_string();
                 } else {
                     if let Err(e) = self.encrypt_file() {
                         self.status_message = format!("Encryption failed: {}", e);
@@ -87,19 +101,20 @@ impl Application for FileEncryptionTool {
             }
             Message::SelectFile => {
                 if let Some(path) = rfd::FileDialog::new().pick_file() {
+                    let truncated_path = truncate_middle(&path.display().to_string(), 36);  
                     self.file_path = path.display().to_string();
-                    self.status_message = format!("File selected: {}", self.file_path);
+                    self.status_message = format!("File selected: {}", truncated_path); 
                 } else {
                     self.status_message = String::from("No file selected.");
                 }
             }
             Message::GenerateKey => {
                 self.key = FileEncryptionTool::generate_random_key();
-                self.status_message = String::from("Key generated.");
+                self.status_message = String::from("Key generated. Make sure to save it somewhere!");
             }
             Message::GenerateIv => {
                 self.iv = FileEncryptionTool::generate_random_iv();
-                self.status_message = String::from("IV generated.");
+                self.status_message = String::from("IV generated. Make sure to save it somewhere!");
             }
             Message::CopyKeyToClipboard => {
                 if self.key.is_empty() {
@@ -123,74 +138,76 @@ impl Application for FileEncryptionTool {
     }
 
     fn view(&self) -> Element<Self::Message> {
-        // File Path Input
-        let file_input = TextInput::new(
-            "Enter the file path...", 
-            &self.file_path
-        )
-        .padding(10)
-        .width(Length::Fixed(400.0))  // Widening input fields for more breathing room
-        .on_input(Message::FilePathChanged);
+    // File Path Input
+    let file_input = TextInput::new(
+        "Enter the file path...", 
+        &self.file_path
+    )
+    .padding(10)
+    .width(Length::Fixed(400.0))  
+    .on_input(Message::FilePathChanged);
 
-        // Key Input
-        let key_input = TextInput::new(
-            "Enter encryption key...", 
-            &self.key
-        )
-        .padding(10)
-        .width(Length::Fixed(400.0))  // Same width for all inputs
-        .on_input(Message::KeyChanged);
+    // Key Input
+    let key_input = TextInput::new(
+        "Enter encryption key...", 
+        &self.key
+    )
+    .padding(10)
+    .width(Length::Fixed(400.0))  // Same width for all inputs
+    .on_input(Message::KeyChanged);
 
-        // IV Input
-        let iv_input = TextInput::new(
-            "Enter initialization vector...", 
-            &self.iv
+    // IV Input
+    let iv_input = TextInput::new(
+        "Enter initialization vector...", 
+        &self.iv
+    )
+    .padding(10)
+    .width(Length::Fixed(400.0))
+    .on_input(Message::IvChanged);
+
+    let left_aligned_content = Column::new()
+        .align_items(Alignment::Start)  
+        .spacing(15)
+        .push(Button::new(Text::new("Select File")).on_press(Message::SelectFile))
+        .push(file_input)
+        .push(
+            Row::new()
+                .spacing(10)
+                .push(Button::new(Text::new("Generate Key")).on_press(Message::GenerateKey))
+                .push(Button::new(Text::new("Copy Key")).on_press(Message::CopyKeyToClipboard))
         )
-        .padding(10)
+        .push(key_input)
+        .push(
+            Row::new()
+                .spacing(10)
+                .push(Button::new(Text::new("Generate IV")).on_press(Message::GenerateIv))
+                .push(Button::new(Text::new("Copy IV")).on_press(Message::CopyIvToClipboard))
+        )
+        .push(iv_input)
+        .push(
+    Button::new(Text::new("Encrypt").horizontal_alignment(Horizontal::Center))
+        .on_press(Message::EncryptFile)
         .width(Length::Fixed(400.0))
-        .on_input(Message::IvChanged);
+        )
+        .push(
+            Button::new(Text::new("Decrypt").horizontal_alignment(Horizontal::Center))
+                .on_press(Message::DecryptFile)
+                .width(Length::Fixed(400.0))
+        )
+        .push(
+            Text::new(&self.status_message)
+                .size(14)
+                .horizontal_alignment(Horizontal::Center)
+                .width(Length::Fill)  
+        );
 
-        let content = Column::new()
-            .padding(20)
-            .align_items(Alignment::Center)
-            .spacing(15)  // Increased spacing between elements for readability
-            .push(Button::new(Text::new("Select File")).on_press(Message::SelectFile))
-            .push(file_input)
-            .push(
-                Row::new()
-                    .spacing(10)
-                    .push(Button::new(Text::new("Generate Key")).on_press(Message::GenerateKey))
-                    .push(Button::new(Text::new("Copy Key")).on_press(Message::CopyKeyToClipboard))
-            )
-            .push(key_input)
-            .push(
-                Row::new()
-                    .spacing(10)
-                    .push(Button::new(Text::new("Generate IV")).on_press(Message::GenerateIv))
-                    .push(Button::new(Text::new("Copy IV")).on_press(Message::CopyIvToClipboard))
-            )
-            .push(iv_input)
-            .push(
-                Row::new()
-                    .spacing(10)
-                    .push(Button::new(Text::new("Encrypt")).on_press(Message::EncryptFile))
-                    ,
-            )
-            .push(
-                Row::new()
-                    .spacing(10)
-                    .push(Button::new(Text::new("Decrypt")).on_press(Message::DecryptFile))
-                    ,
-            )
-            .push(Text::new(&self.status_message).size(16));  
-
-        Container::new(content)
-            .width(Length::Fill)
-            .height(Length::Fill)
-            .center_x()
-            .center_y()
+        // Smaller outer container to reduce window size
+        Container::new(left_aligned_content)
+            .center_x()                  
+            .center_y()  
+            .padding(60)                 
             .into()
-    }
+        }
 
 }
 
@@ -245,5 +262,14 @@ impl FileEncryptionTool {
 }
 
 fn main() -> iced::Result {
-    FileEncryptionTool::run(Settings::default())
+    let settings = Settings {
+        window: iced::window::Settings {
+            size: iced::Size::new(540.0, 550.0), // window size
+            // resizable: false, // Disable resizing to keep the size fixed
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+
+    FileEncryptionTool::run(settings)
 }
