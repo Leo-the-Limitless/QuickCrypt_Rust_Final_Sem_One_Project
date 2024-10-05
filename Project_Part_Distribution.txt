@@ -1,0 +1,38 @@
+Ma Hanni
+1. Functions
+encrypt_file
+impl new
+
+2. Messages
+select_file
+EncryptFile
+FilePath, Key, Iv Changed
+
+3. GUI
+Input Fields
+Status Message
+------------------------------
+May Nyein
+1. Functions
+decrypt_file
+generate key, iv
+copy key, iv
+
+2. Messages
+DecryptFile
+Generate key, iv
+Copy key, iv
+
+3. GUI
+Buttons
+Overall GUI enhancement
+
+------------------------------
+GUI enhancement
+Paddings
+
+Key twy ko byy bk poh
+
+Message twy user-friendly po phyik ag loke
+
+Key twy ko thy chr save htrr phoe remind loke
