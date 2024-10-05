@@ -154,27 +154,33 @@ impl Application for FileEncryptionTool {
             .padding(20)
             .align_items(Alignment::Center)
             .spacing(15)  // Increased spacing between elements for readability
+            .push(Button::new(Text::new("Select File")).on_press(Message::SelectFile))
             .push(file_input)
             .push(
                 Row::new()
                     .spacing(10)
                     .push(Button::new(Text::new("Generate Key")).on_press(Message::GenerateKey))
-                    .push(Button::new(Text::new("Generate IV")).on_press(Message::GenerateIv)),
+                    .push(Button::new(Text::new("Copy Key")).on_press(Message::CopyKeyToClipboard))
             )
             .push(key_input)
             .push(
                 Row::new()
                     .spacing(10)
-                    .push(Button::new(Text::new("Copy Key")).on_press(Message::CopyKeyToClipboard))
-                    .push(Button::new(Text::new("Copy IV")).on_press(Message::CopyIvToClipboard)),
+                    .push(Button::new(Text::new("Generate IV")).on_press(Message::GenerateIv))
+                    .push(Button::new(Text::new("Copy IV")).on_press(Message::CopyIvToClipboard))
             )
             .push(iv_input)
             .push(
                 Row::new()
                     .spacing(10)
                     .push(Button::new(Text::new("Encrypt")).on_press(Message::EncryptFile))
+                    ,
+            )
+            .push(
+                Row::new()
+                    .spacing(10)
                     .push(Button::new(Text::new("Decrypt")).on_press(Message::DecryptFile))
-                    .push(Button::new(Text::new("Select File")).on_press(Message::SelectFile)),
+                    ,
             )
             .push(Text::new(&self.status_message).size(16));  
 
