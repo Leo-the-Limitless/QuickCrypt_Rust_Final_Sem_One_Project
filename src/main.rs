@@ -265,7 +265,7 @@ fn main() -> iced::Result {
     let settings = Settings {
         window: iced::window::Settings {
             size: iced::Size::new(540.0, 550.0), // window size
-            // resizable: false, // Disable resizing to keep the size fixed
+            resizable: false, // Disable resizing to keep the size fixed
             ..Default::default()
         },
         ..Default::default()
