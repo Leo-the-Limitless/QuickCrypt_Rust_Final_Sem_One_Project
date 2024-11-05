@@ -2,10 +2,11 @@ use aes::Aes256;
 use block_modes::{BlockMode, Cbc};
 use block_modes::block_padding::Pkcs7;
 use hex::{decode, encode};
-use iced::widget::{Button, Column, Row, Container, Text, TextInput};
+use iced::widget::{Button, Column, Row, Container, Text, TextInput, Space};
 use iced::{alignment::Horizontal, executor, Alignment, Application, Command, Element, Length, Settings, Theme, clipboard};
 use rand::Rng;
 use std::fs::{read, write};
+use iced::Renderer;
 
 type Aes256Cbc = Cbc<Aes256, Pkcs7>;
 
@@ -14,6 +15,7 @@ struct FileEncryptionTool {
     key: String,
     iv: String,
     status_message: String,
+    dark_mode: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -28,6 +30,7 @@ enum Message {
     GenerateIv,
     CopyKeyToClipboard,
     CopyIvToClipboard,
+    ToggleTheme,
 }
 
 fn truncate_middle(s: &str, max_length: usize) -> String {
@@ -45,10 +48,13 @@ impl Application for FileEncryptionTool {
     type Flags = ();
     type Theme = Theme;
 
-    fn theme(&self) -> iced::Theme {
-		iced::Theme::KanagawaDragon
-
-	}
+    fn theme(&self) -> Theme {
+        if self.dark_mode {
+            iced::Theme::KanagawaDragon
+        } else {
+            iced::Theme::Light
+        }
+    }
 
     fn new(_flags: ()) -> (Self, Command<Self::Message>) {
         (
@@ -57,6 +63,7 @@ impl Application for FileEncryptionTool {
                 key: String::new(),
                 iv: String::new(),
                 status_message: String::from("Ready"),
+                dark_mode: true,
             },
             Command::none(),
         )
@@ -68,6 +75,9 @@ impl Application for FileEncryptionTool {
 
     fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
+            Message::ToggleTheme => {
+                self.dark_mode = !self.dark_mode;
+            }
             Message::FilePathChanged(new_path) => {
                 self.file_path = new_path;
             }
@@ -138,6 +148,16 @@ impl Application for FileEncryptionTool {
     }
 
     fn view(&self) -> Element<Self::Message> {
+        let emoji = if self.dark_mode { "Dark >> Off" } else { "Dark >> On" };
+        let theme_toggle_button: iced::widget::Button<'_, Message, Theme, Renderer> = Button::new(Text::new(emoji))
+            .on_press(Message::ToggleTheme)
+            .padding(10);
+
+        let header = Row::new()
+            .push(Space::new(Length::Fill, Length::Shrink))
+            .push(theme_toggle_button)
+            .align_items(Alignment::Center)
+            .spacing(10);
     // File Path Input
     let file_input = TextInput::new(
         "Enter the file path...", 
@@ -168,6 +188,7 @@ impl Application for FileEncryptionTool {
     let left_aligned_content = Column::new()
         .align_items(Alignment::Start)  
         .spacing(15)
+        .push(header)
         .push(Button::new(Text::new("Select File")).on_press(Message::SelectFile))
         .push(file_input)
         .push(
@@ -264,7 +285,7 @@ impl FileEncryptionTool {
 fn main() -> iced::Result {
     let settings = Settings {
         window: iced::window::Settings {
-            size: iced::Size::new(540.0, 550.0), // window size
+            size: iced::Size::new(540.0, 600.0), // window size
             resizable: false, // Disable resizing to keep the size fixed
             ..Default::default()
         },

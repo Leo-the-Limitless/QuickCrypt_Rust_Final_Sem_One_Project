@@ -26,5 +26,13 @@ Copy key, iv
 
 3. GUI
 Buttons
-Overall GUI enhancement
-Theme
+Theme + Overall GUI enhancement
+
+-----------------
+Experience
+Theme add ya dh
+File path shy yin phyk htoke ya dh
+
+User friendly phyik dae status msgs sinn srr ya dh
+
+UX a twk generate twy copy button twy
