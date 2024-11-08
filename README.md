@@ -9,7 +9,7 @@ This tool is ideal for securely protecting files, whether they are sensitive doc
 - **Dark Mode Toggle** to switch between light and dark themes.
 - **Clipboard Support** for copying keys and IVs.
 
-- ## 📥 Installation
+## 📥 Installation
 
 1. If you haven't installed Rust yet, follow the instructions on the Rust Official Website.
 
@@ -32,5 +32,5 @@ This tool is ideal for securely protecting files, whether they are sensitive doc
 
     The executable will be located in target/release/file-encryption-tool
 
-- **Demo Video**:
+## 📼Demo Video
   https://drive.google.com/file/d/1XS_9cn3ZbC_HK-ML1kPYcV2yP4lhtCd2/view?usp=sharing
