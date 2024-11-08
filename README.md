@@ -11,5 +11,26 @@ This tool is ideal for securely protecting files, whether they are sensitive doc
 
 - ## 📥 Installation
 
-1. **Clone the repository**
-2. **cargo run in the terminal**
+1. If you haven't installed Rust yet, follow the instructions on the Rust Official Website.
+
+    To verify the installation: Run **rustc --version** and **cargo --version**
+
+2. Clone the repository:
+    Open a terminal and clone your project repository:
+
+    **git clone https://github.com/your-username/file-encryption-tool.git**
+
+    **cd file-encryption-tool**
+
+3. Run
+   
+    To compile and run the application, use: **cargo run --release**
+
+    This command builds the project in release mode for better performance.
+
+4. Optional: To create a standalone executable, run: **cargo build --release**
+
+    The executable will be located in target/release/file-encryption-tool
+
+- **Demo Video**:
+  https://drive.google.com/file/d/1XS_9cn3ZbC_HK-ML1kPYcV2yP4lhtCd2/view?usp=sharing
