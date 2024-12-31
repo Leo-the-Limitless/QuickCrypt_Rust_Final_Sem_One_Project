@@ -1,5 +1,5 @@
 # **QuickCrypt (File Encryption Tool)** 🔐
-A Rust-based application that is intended for securely encrypting and decrypting files using AES-256 encryption in CBC mode. The application allows users to select files, enter or generate encryption keys and initialization vectors (IVs). As a bonus feature, it supports both light mode and dark mode themes.
+This is a Rust-based application that I and my teammate worked together on. It is intended for securely encrypting and decrypting files using AES-256 encryption in CBC mode. The application allows users to select files, enter or generate encryption keys and initialization vectors (IVs). As a bonus feature, it supports both light mode and dark mode themes.
 
 This tool is ideal for securely protecting files, whether they are sensitive documents, images, or other forms of data.
 
