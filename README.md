@@ -18,9 +18,10 @@ This tool is ideal for securely protecting files, whether they are sensitive doc
 2. Clone the repository:
     Open a terminal and clone your project repository:
 
-    **git clone https://github.com/your-username/file-encryption-tool.git**
 
-    **cd file-encryption-tool**
+    **git clone https://github.com/Leo-the-Limitless/QuickCrypt_Rust_Final_Sem_One_Project.git**
+
+    **cd QuickCrypt_Rust_Final_Sem_One_Project**
 
 3. Run
    
