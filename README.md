@@ -35,3 +35,6 @@ This tool is ideal for securely protecting files, whether they are sensitive doc
 
 ## 📼Demo Video
   https://drive.google.com/file/d/1XS_9cn3ZbC_HK-ML1kPYcV2yP4lhtCd2/view?usp=sharing
+
+  ## 🖼️ Preview
+  ![Dark-Mode](Dark-Mode.png)
